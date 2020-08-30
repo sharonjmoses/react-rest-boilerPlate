@@ -89,7 +89,7 @@ const GetPage = () => {
     {/* <Request
     config={{
       method: 'get',
-      headers: {'Authorization': '563492ad6f91700001000001f08395d1fb9c42cf93cda644f9f05767'},
+      headers: {'Authorization': ''},
       url: 'https://api.pexels.com/v1/search?query=mustang',
     }}
   >
