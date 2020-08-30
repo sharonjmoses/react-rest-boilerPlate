@@ -9,11 +9,27 @@ const GetPage = () => {
     
     const [ data, setData]=useState([]);
    
+    const [ nextP, setNext]=useState('');
 
     const onChange = (event) => {
         
         setSearch(event.target.value);
       };
+
+      async function  nextPage(){
+    
+        const response = await fetch(nextP,
+        {'Authorization': process.env.REACT_APP_TOKEN})
+        const rawData = await response.json()
+        if(rawData){
+    
+            setData(rawData.photos)
+        }
+        if(rawData.next_page){
+            setNext(rawData.next_page)
+        }
+      
+    }
 
 
       async function  onSubmit(e){
@@ -22,15 +38,19 @@ const GetPage = () => {
         {'Authorization': process.env.REACT_APP_TOKEN})
         const rawData = await response.json()
         if(rawData){
+            console.log(rawData)
             setData(rawData.photos)
+        }
+        if(rawData.next_page){
+            setNext(rawData.next_page)
         }
       
     }
 
-    // console.log(data)
+    console.log(data)
 
   return (
-      <div>
+      <>
     <form id="mySearch" onSubmit = {onSubmit}>
           <input
                         type="text"
@@ -42,22 +62,30 @@ const GetPage = () => {
                         required
                       />
 
-<button>Submit</button>
+    <button>Submit</button>
 
      
     </form>
-    {(data.length > 0) ? (data.map((obj, index)=>(
+    <div>
+    {(data.length > 0) ? (
+      
+           
+        data.map((obj, index)=>(
         <div key={obj.id}>
             <h1>{obj.photographer}</h1>
             <PhotoContainer url={obj.src}/>
-           
         </div>
     ))
+           
     ):(
         <div>No Data</div>
-    )
-}
+    )}
+    {
+        (nextP) ? (<button onClick={nextPage}>NextPage</button>): null
+    }
 
+    </div>
+        
     {/* <Request
     config={{
       method: 'get',
@@ -81,7 +109,7 @@ const GetPage = () => {
     )}
   </Request> */}
     
-     </div>
+     </>
   );
 };
 
